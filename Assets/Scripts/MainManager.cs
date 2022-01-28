@@ -3,28 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainManager : MonoBehaviour
 {
     public Brick BrickPrefab;
-    public int LineCount = 6;
     public Rigidbody Ball;
-
-    public Text ScoreText;
     public GameObject GameOverText;
+    public Text scoreText;
 
     private PlayerInfoManager playerInfoManager;
 
+    public int m_Points;
+    public int LineCount = 6;
+
     private bool m_Started = false;
-    private int m_Points;
-    
+   
+
     // Start is called before the first frame update
     void Start()
     {
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         playerInfoManager = GameObject.Find("PlayerInfoManager").GetComponent<PlayerInfoManager>();
-        
+
+        scoreText.text = $"Score : {playerInfoManager.playerName} : 0";
+
         int[] pointCountArray = new [] {1,1,2,2,5,5};
         for (int i = 0; i < LineCount; ++i)
         {
@@ -33,7 +37,7 @@ public class MainManager : MonoBehaviour
                 Vector3 position = new Vector3(-1.5f + step * x, 2.5f + i * 0.3f, 0);
                 var brick = Instantiate(BrickPrefab, position, Quaternion.identity);
                 brick.PointValue = pointCountArray[i];
-                brick.onDestroyed.AddListener(playerInfoManager.AddPoint);
+                brick.onDestroyed.AddListener(AddPoint);
             }
         }
     }
@@ -55,8 +59,14 @@ public class MainManager : MonoBehaviour
         }
     }
 
-    public void GameOver()
+    public void AddPoint(int point)
     {
+        m_Points += point;
+        scoreText.text = $"Score : {playerInfoManager.playerName} : {m_Points}";
+    }
+
+    public void GameOver()
+    { 
         GameOverText.SetActive(true);
     }
 

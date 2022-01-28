@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,18 +14,6 @@ using UnityEditor;
 
 public class MenuUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void StartGame()
     {
         SceneManager.LoadScene(1);

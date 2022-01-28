@@ -1,39 +1,68 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class PlayerInfoManager : MonoBehaviour
 {
-    public static PlayerInfoManager Instance;
+    public static PlayerInfoManager PlayerInfoInstance;
 
-    public TextMeshProUGUI playerNameText;
-    public TextMeshProUGUI bestScoreText;
-    public TextMeshProUGUI scoreText;
+    public GameObject playerInput;
+    public GameObject bestScoreText;
 
-    private int m_Points;
+    public int b_Score;
+    public string playerName;
 
     private void Awake()
     {
-        if (Instance != null)
+
+        if (PlayerInfoInstance != null)
         {
             Destroy(gameObject);
             return;
         }
 
-        Instance = this;
+        PlayerInfoInstance = this;
         DontDestroyOnLoad(gameObject);
     }
 
-    public void AddPoint(int point)
+    public void SetPlayerName()
     {
-        m_Points += point;
-        scoreText.text = $"Score : {m_Points}";
+        playerName = playerInput.GetComponent<Text>().text;
     }
 
-    public void BestScore()
+    [System.Serializable]
+
+    class SaveData
     {
-        bestScoreText.text = $"Best {scoreText}";
+        public GameObject bestScoreText;
+        public string playerName;
+        public int b_Score;
+    }
+
+    public void SaveBestScore()
+    {
+        SaveData data = new SaveData();
+        data.bestScoreText = bestScoreText;
+        data.b_Score = b_Score;
+
+        string json = JsonUtility.ToJson(data);
+
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+    }
+
+    public void LoadBestScore()
+    {
+        string path = Application.persistentDataPath + "/savefile.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+            bestScoreText = data.bestScoreText;
+            b_Score = data.b_Score;
+        }
     }
 }
