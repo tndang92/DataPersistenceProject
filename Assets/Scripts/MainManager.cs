@@ -7,15 +7,18 @@ using TMPro;
 
 public class MainManager : MonoBehaviour
 {
-    public Brick BrickPrefab;
     public Rigidbody Ball;
-    public GameObject GameOverText;
+
+    public Brick brickPrefab;
+    public GameObject gameOverText;
+    public GameObject newHighScoreText;
     public Text scoreText;
 
     private PlayerInfoManager playerInfoManager;
 
+
     public int m_Points;
-    public int LineCount = 6;
+    public int lineCount = 6;
 
     private bool m_Started = false;
    
@@ -30,12 +33,12 @@ public class MainManager : MonoBehaviour
         scoreText.text = $"Score : {playerInfoManager.playerName} : 0";
 
         int[] pointCountArray = new [] {1,1,2,2,5,5};
-        for (int i = 0; i < LineCount; ++i)
+        for (int i = 0; i < lineCount; ++i)
         {
             for (int x = 0; x < perLine; ++x)
             {
                 Vector3 position = new Vector3(-1.5f + step * x, 2.5f + i * 0.3f, 0);
-                var brick = Instantiate(BrickPrefab, position, Quaternion.identity);
+                var brick = Instantiate(brickPrefab, position, Quaternion.identity);
                 brick.PointValue = pointCountArray[i];
                 brick.onDestroyed.AddListener(AddPoint);
             }
@@ -62,12 +65,23 @@ public class MainManager : MonoBehaviour
     public void AddPoint(int point)
     {
         m_Points += point;
-        scoreText.text = $"Score : {playerInfoManager.playerName} : {m_Points}";
+        scoreText.text = $"Score : {playerInfoManager.newPlayerName} : {m_Points}";
+
+        if (m_Points > playerInfoManager.bestScore)
+        {
+            playerInfoManager.playerName = playerInfoManager.newPlayerName;
+            playerInfoManager.newHighScore = m_Points;
+        }
     }
 
     public void GameOver()
-    { 
-        GameOverText.SetActive(true);
+    {
+        gameOverText.SetActive(true);
+
+        if (playerInfoManager.newHighScore > playerInfoManager.bestScore)
+        {
+            playerInfoManager.SetBestScore();
+        }
     }
 
     public void TryAgain()
