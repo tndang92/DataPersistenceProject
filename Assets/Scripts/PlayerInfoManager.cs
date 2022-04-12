@@ -9,10 +9,10 @@ public class PlayerInfoManager : MonoBehaviour
 {
     public static PlayerInfoManager PlayerInfoInstance;
 
-    public GameObject playerInput;
+    public Text playerNameText;
     public Text bestScoreText;
+    public GameObject playerInput;
 
-    public string playerName;
     public string newPlayerName;
     public int newHighScore;
     public int bestScore;
@@ -31,18 +31,15 @@ public class PlayerInfoManager : MonoBehaviour
 
     public void SetPlayerName()
     {
-        newPlayerName = playerInput.GetComponent<Text>().text;
+        playerNameText.text = playerInput.GetComponent<Text>().text;
+        newPlayerName = playerNameText.text;
     }
 
     public void SetBestScore()
     {
-        if (newHighScore > bestScore)
-        {
             bestScore = newHighScore;
-            newPlayerName = playerName;
-            bestScoreText.text = $"Best Score : {playerName} : {bestScore}";
-        }
-
+            newPlayerName = playerNameText.text;
+            bestScoreText.text = $"Best Score : {newPlayerName} : {bestScore}";
     }
 
     [System.Serializable]
@@ -50,7 +47,7 @@ public class PlayerInfoManager : MonoBehaviour
     class SaveData
     {
         public Text bestScoreText;
-        public string playerName;
+        public Text playerNameText;
         public int bestScore;
     }
 
@@ -58,7 +55,7 @@ public class PlayerInfoManager : MonoBehaviour
     {
         SaveData data = new SaveData();
         data.bestScoreText = bestScoreText;
-        data.playerName = playerName;
+        data.playerNameText = playerNameText;
         data.bestScore = bestScore;
 
         string json = JsonUtility.ToJson(data);
@@ -75,7 +72,7 @@ public class PlayerInfoManager : MonoBehaviour
             SaveData data = JsonUtility.FromJson<SaveData>(json);
 
             bestScoreText = data.bestScoreText;
-            playerName = data.playerName;
+            playerNameText = data.playerNameText;
             bestScore = data.bestScore;
         }
     }

@@ -30,7 +30,7 @@ public class MainManager : MonoBehaviour
         int perLine = Mathf.FloorToInt(4.0f / step);
         playerInfoManager = GameObject.Find("PlayerInfoManager").GetComponent<PlayerInfoManager>();
 
-        scoreText.text = $"Score : {playerInfoManager.playerName} : 0";
+        scoreText.text = $"Score : {playerInfoManager.newPlayerName} : 0";
 
         int[] pointCountArray = new [] {1,1,2,2,5,5};
         for (int i = 0; i < lineCount; ++i)
@@ -65,13 +65,14 @@ public class MainManager : MonoBehaviour
     public void AddPoint(int point)
     {
         m_Points += point;
-        scoreText.text = $"Score : {playerInfoManager.newPlayerName} : {m_Points}";
 
         if (m_Points > playerInfoManager.bestScore)
         {
-            playerInfoManager.playerName = playerInfoManager.newPlayerName;
+            playerInfoManager.playerNameText.text = playerInfoManager.newPlayerName;
             playerInfoManager.newHighScore = m_Points;
         }
+
+        scoreText.text = $"Score : {playerInfoManager.newPlayerName} : {m_Points}";
     }
 
     public void GameOver()
